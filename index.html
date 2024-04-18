@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock,Paper and Scissor Game</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="index.js" />
+  </head>
+  <body>
+    <div class="score-con">
+      <div class="logo">
+        <p>Rock</p>
+        <p>Paper</p>
+        <p>Scissors</p>
+      </div>
+      <div class="flex-item">
+        <div class="score2">
+          <p>COMPUTER</p>
+          <p>SCORE</p>
+          <span id="CoMscore">0</span>
+        </div>
+        <div class="score">
+          <p>YOUR</p>
+          <p>SCORE</p>
+          <span id="score">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-con">
+      <div class="info">
+        <p class="user">You Picked</p>
+        <p class="machine">Pc Picked</p>
+      </div>
+
+      <div class="option">
+        <img src="triangle-outline-256.png" alt="" class="triangle" />
+
+        <div class="sci-con con">
+          <div class="item">
+            <img src="sciccors.png" alt="" />
+          </div>
+        </div>
+
+        <div class="rock-con con">
+          <div class="item">
+            <img src="stone.png" alt="" />
+          </div>
+        </div>
+
+        <div class="paper-con con">
+          <div class="item">
+            <img src="paper.png" alt="" />
+          </div>
+        </div>
+
+        <div class="sci-con computer">
+          <div class="item">
+            <img src="sciccors.png" alt="" />
+          </div>
+        </div>
+
+        <div class="rock-con computer">
+          <div class="item">
+            <img src="stone.png" alt="" />
+          </div>
+        </div>
+
+        <div class="paper-con computer">
+          <div class="item">
+            <img src="paper.png" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-div">
+        <button class="btn-rule">RULE</button>
+        <button class="Next-rule">NEXT</button>
+      </div>
+      <div class="rule-modal">
+        <div class="rule-img">
+          <div>
+            <!-- <p>Rule</p> -->
+            <button class="close"><img src="remove.png" alt="" /></button>
+          </div>
+          <img src="rules.png" alt="" class="rule" />
+        </div>
+      </div>
+
+      <div class="win-modal">
+        <h1 class="winner">YOU WIN</h1>
+        <h2 class="winner2">AGAINST PC</h2>
+        <!-- <p>AGAINST PC</p> -->
+        <button class="play">PLAY AGAIN</button>
+      </div>
+    </div>
+
+    <div class="hurray">
+      <span> <img src="cup.png" alt="" /></span>
+      <p><img src="star.png" alt="" /></p>
+
+      <div class="head">
+        <h1>HURRAY!!</h1>
+        <h2>YOU WON THE GAME</h2>
+      </div>
+      <button class="Next-rule Next-rule-Btn" id="next">NEXT</button>
+      <button class="play play-btn" id="play">PLAY AGAIN</button>
+    </div>
+  </body>
+  <script>
+    let con = document.querySelectorAll(".con");
+    let computer = document.querySelectorAll(".computer");
+    let user = document.querySelector(".user");
+    let machine = document.querySelector(".machine");
+    let triangle = document.querySelector(".triangle");
+    let winModal = document.querySelector(".win-modal");
+    let winner = document.querySelector(".winner");
+    let play = document.querySelector(".play");
+    let scoreElem = document.getElementById("score");
+    let CoMscoreElem = document.getElementById("CoMscore");
+    let ruleBtn = document.querySelector(".btn-rule");
+    let rulemodal = document.querySelector(".rule-modal");
+    let ruleimg = document.querySelector(".rule-img");
+    let score = JSON.parse(localStorage.getItem("sc")) || 0;
+    let computerScore = JSON.parse(localStorage.getItem("CoMscore")) || 0;
+    let nextRuleBtn = document.querySelector(".Next-rule");
+
+    scoreElem.innerText = score;
+    CoMscoreElem.innerText = computerScore;
+
+    con.forEach((Element, index) => {
+      Element.addEventListener("click", () => {
+        user.style.opacity = "1";
+        triangle.style.display = "none";
+
+        con.forEach((item) => {
+          item.style.display = "none";
+        });
+        Element.style.display = "block";
+        Element.classList.add("show");
+
+        setTimeout(() => {
+          machine.style.opacity = "1";
+          let random = Math.floor(Math.random() * 3);
+
+          setTimeout(() => {
+            computer[random].style.display = "block";
+            computer[random].classList.add("right");
+
+            if (random == index) {
+              winModal.style.display = "grid";
+              winner.innerText = "MATCH DRAW";
+            } else if (
+              (index == 0 && random == 2) ||
+              (index == 1 && random == 0) ||
+              (index == 2 && random == 1)
+            ) {
+              winModal.style.display = "grid";
+              winner.innerText = "YOU WIN";
+              score++;
+              scoreElem.innerText = score;
+              localStorage.setItem("sc", JSON.stringify(score));
+            } else {
+              winModal.style.display = "grid";
+              winner.innerText = "YOU LOSE";
+              computerScore++;
+              CoMscoreElem.innerText = computerScore;
+              localStorage.setItem("CoMscore", JSON.stringify(computerScore));
+            }
+          }, 1000);
+        }, 500);
+      });
+    });
+
+    play.addEventListener("click", () => {
+      if (score > computerScore) {
+        nextRuleBtn.style.display = "block";
+      } else {
+        nextRuleBtn.style.display = "none";
+      }
+      window.location.reload();
+    });
+    if (score > computerScore) {
+      nextRuleBtn.style.display = "block";
+    } else {
+      nextRuleBtn.style.display = "none";
+    }
+    ruleBtn.addEventListener("click", () => {
+      rulemodal.style.display = "flex";
+      setTimeout(() => {
+        ruleimg.style.transform = "translateY(0)";
+      }, 400);
+    });
+    nextRuleBtn.addEventListener("click", () => {
+      document.querySelector(".hurray").classList.add("hurray-active");
+    });
+    let close = document.querySelector(".close");
+    close.addEventListener("click", () => {
+      ruleimg.style.transform = "translateY(-200px)";
+      setTimeout(() => {
+        rulemodal.style.display = "none";
+      }, 100);
+    });
+    document.querySelector(".play-btn").addEventListener("click", () => {
+      localStorage.clear();
+      window.location.reload();
+    });
+    document.querySelector(".Next-rule-Btn").addEventListener("click", () => {
+      localStorage.clear();
+      window.location.reload();
+    });
+  </script>
+</html>
